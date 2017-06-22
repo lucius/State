@@ -1,5 +1,5 @@
 {
-    "name": "particle/state",
+    "name": "lucius/state",
     "type": "library",
     "description": "A rather simplistic but pretty finite state machine implementation",
     "keywords": ["finite", "state", "machine", "fsm"],

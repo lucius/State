@@ -1,7 +1,6 @@
 <?php
 namespace Particle\State;
 
-use League\Event\Emitter;
 use Particle\State\Exception\NoSuchTransition;
 use Particle\State\Exception\TransitionNotAllowed;
 
@@ -28,6 +27,23 @@ class StateMachine
         $this->states = $states;
         $this->currentState = $initialState;
         $this->transitions = new TransitionCollection();
+    }
+
+    /**
+     * @return State
+     */
+    public function getCurrentState()
+    {
+        return $this->currentState;
+    }
+
+    /**
+     * @param State $compare
+     * @return bool
+     */
+    public function isInState(State $compare)
+    {
+        return $this->currentState->equals($compare);
     }
 
     /**
@@ -76,7 +92,7 @@ class StateMachine
             $this->currentState = $state;
         };
 
-        return $transition->apply($setState, $this->getEmitter());
+        return $transition->apply($setState);
     }
 
     /**
@@ -88,15 +104,4 @@ class StateMachine
         $this->getEmitter()->addListener($event, $listener);
     }
 
-    /**
-     * @return Emitter
-     */
-    protected function getEmitter()
-    {
-        if (!$this->emitter instanceof Emitter) {
-            $this->emitter = new Emitter();
-        }
-
-        return $this->emitter;
-    }
 }

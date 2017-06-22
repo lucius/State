@@ -1,7 +1,10 @@
 <?php
 namespace Particle\State;
 
-use League\Event\Emitter;
+
+use Illuminate\Support\Facades\Event;
+use Particle\State\Event\BeforeApplyTransition;
+use Particle\State\Event\TransitionApplied;
 
 class Transition
 {
@@ -57,17 +60,27 @@ class Transition
      * @param Emitter $emitter
      * @return bool
      */
-    public function apply(callable $callable, Emitter $emitter)
+    public function apply(callable $callable)
     {
+        Event::fire(BeforeApplyTransition::withTransition(
+            $this->name,
+            $this->from->toArray(),
+            (string) $this->to
+        ));
+
+        foreach($this->from as $fromState) {
+            $this->from->leaveState();
+        }
+
+        $this->to->enterState();
+
         call_user_func($callable, $this->to);
 
-        $emitter->emit(
-            Event\TransitionApplied::withTransition(
-                $this->name,
-                $this->from->toArray(),
-                (string) $this->to
-            )
-        );
+        Event::fire(TransitionApplied::withTransition(
+            $this->name,
+            $this->from->toArray(),
+            (string) $this->to
+        ));
 
         return true;
     }

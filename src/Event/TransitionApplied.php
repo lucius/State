@@ -1,10 +1,9 @@
 <?php
 namespace Particle\State\Event;
 
-use League\Event\Event;
 use Particle\State\State;
 
-class TransitionApplied extends Event
+class TransitionApplied
 {
     /** @var string */
     private $transition;

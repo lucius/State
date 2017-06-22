@@ -7,11 +7,23 @@ class State
     private $state;
 
     /**
+     * @var callback function
+     */
+    private $onEnterCallback;
+    /**
+     * @var callback function
+     */
+    private $onLeaveCallback;
+
+    /**
      * @param string $state
      */
-    private function __construct($state)
+    private function __construct($state, $onEnterCallback = null, $onLeaveCallback = null)
     {
         $this->state = $state;
+
+        $this->onEnterCallback = $onEnterCallback;
+        $this->onLeaveCallback = $onLeaveCallback;
     }
 
     /**
@@ -38,5 +50,23 @@ class State
     public function __toString()
     {
         return $this->state;
+    }
+
+    public function enterState()
+    {
+        $this->callCallback($this->onEnterCallback);
+    }
+
+    public function leaveState()
+    {
+        $this->callCallback($this->onLeaveCallback);
+    }
+
+    private function callCallback($cb) {
+        if(!is_null($cb)) {
+            return $cb();
+        }
+
+        return true;
     }
 }

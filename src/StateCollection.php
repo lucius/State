@@ -58,6 +58,11 @@ class StateCollection
         $this->states[] = $state;
     }
 
+    protected function getStates()
+    {
+        return $this->states;
+    }
+
     public function toArray()
     {
         return array_map('strval', $this->states);

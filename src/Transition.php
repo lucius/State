@@ -60,7 +60,7 @@ class Transition
      * @param Emitter $emitter
      * @return bool
      */
-    public function apply(callable $callable)
+    public function apply(callable $callable, $data)
     {
         Event::fire(BeforeApplyTransition::withTransition(
             $this->name,
@@ -69,10 +69,10 @@ class Transition
         ));
 
         foreach($this->from as $fromState) {
-            $this->from->leaveState();
+            $fromState->leaveState($data);
         }
 
-        $this->to->enterState();
+        $this->to->enterState($data);
 
         call_user_func($callable, $this->to);
 

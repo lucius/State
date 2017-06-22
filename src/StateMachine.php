@@ -80,7 +80,7 @@ class StateMachine
      * @throws NoSuchTransition
      * @throws TransitionNotAllowed
      */
-    public function transition($transitionName)
+    public function transition($transitionName, $data = [])
     {
         if (!$this->canApplyTransition($transitionName)) {
             throw TransitionNotAllowed::forTransitionName($transitionName);
@@ -92,7 +92,7 @@ class StateMachine
             $this->currentState = $state;
         };
 
-        return $transition->apply($setState);
+        return $transition->apply($setState, $data);
     }
 
     /**
